@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
@@ -6,8 +6,8 @@ const containerStyle = {
   height: '100vh'
 };
 
-function Map(props) {
-  const [currentPosition, setCurrentPosition] = useState({});
+export default function Map(props) {
+  const [currentPosition, setCurrentPosition] = useState({ lat: 33.6349, lng: -117.7405 });
 
   const success = position => {
     const currentPosition = {
@@ -17,9 +17,15 @@ function Map(props) {
     setCurrentPosition(currentPosition);
   };
 
+  const onMarkerDragEnd = e => {
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    setCurrentPosition({ lat, lng });
+  };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(success);
-  });
+  }, []);
 
   return (
     <LoadScript
@@ -30,14 +36,11 @@ function Map(props) {
         center={currentPosition}
         zoom={15}
       >
-        <>
-          <Marker position={currentPosition} />
-        </>
+        <Marker
+          position={currentPosition}
+          onDragEnd={e => onMarkerDragEnd(e)}
+          draggable={true} />
       </GoogleMap>
     </LoadScript>
-
   );
-
 }
-
-export default React.memo(Map);
