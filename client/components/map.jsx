@@ -23,9 +23,26 @@ export default function Map(props) {
     setCurrentPosition({ lat, lng });
   };
 
+  const handleYelpResults = async () => {
+    fetch(`/api/yelp/search/${currentPosition.lat},${currentPosition.lng}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(result => {
+        console.log(result);
+      });
+  };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(success);
   }, []);
+
+  useEffect(() => {
+    handleYelpResults();
+  });
 
   return (
     <LoadScript

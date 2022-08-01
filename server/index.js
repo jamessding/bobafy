@@ -1,3 +1,4 @@
+// const fetch = require('node-fetch');
 require('dotenv/config');
 const path = require('path');
 const express = require('express');
@@ -23,11 +24,22 @@ app.get('/api/yelp/search/:location', async (req, res, next) => {
       term: 'Bubble Tea',
       location
     });
-    res.status(200).send(response.jsonBody.businesses[0]);
+    res.status(200).send(response.jsonBody.businesses);
   } catch (err) {
     console.error(err);
   }
 });
+
+// app.get('/api/yelp/:businessId', async (req, res, next) => {
+//   const { businessId } = req.params;
+//   try {
+//     const response = await fetch(`https://api.yelp.com/v3/businesses/${businessId}/reviews`, body);
+//     const reviews = await response.json();
+//     res.status(200).json(reviews);
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
 
 app.use(errorMiddleware);
 
