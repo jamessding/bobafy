@@ -8,6 +8,7 @@ const containerStyle = {
 
 export default function Map(props) {
   const [currentPosition, setCurrentPosition] = useState({ lat: 33.6349, lng: -117.7405 });
+  const [yelpResults, setYelpResults] = useState([]);
 
   const success = position => {
     const currentPosition = {
@@ -23,26 +24,29 @@ export default function Map(props) {
     setCurrentPosition({ lat, lng });
   };
 
-  const handleYelpResults = async () => {
-    fetch(`/api/yelp/search/${currentPosition.lat},${currentPosition.lng}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => res.json())
-      .then(result => {
-        console.log(result);
-      });
-  };
-
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(success);
+    navigator.geolocation.watchPosition(success);
   }, []);
 
   useEffect(() => {
+    const handleYelpResults = async () => {
+      try {
+        fetch(`/api/yelp/search/${currentPosition.lat},${currentPosition.lng}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(res => res.json())
+          .then(result => {
+            setYelpResults(result);
+          });
+      } catch (err) {
+        console.error(err);
+      }
+    };
     handleYelpResults();
-  });
+  }, [currentPosition.lat, currentPosition.lng]);
 
   return (
     <LoadScript
@@ -51,8 +55,18 @@ export default function Map(props) {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={currentPosition}
-        zoom={15}
+        zoom={13}
       >
+        {
+          yelpResults.map(result => {
+            return (
+              <Marker
+                key={result.id}
+                position={{ lat: result.coordinates.latitude, lng: result.coordinates.longitude }}
+              />
+            );
+          })
+        }
         <Marker
           position={currentPosition}
           onDragEnd={e => onMarkerDragEnd(e)}
