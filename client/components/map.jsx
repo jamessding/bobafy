@@ -49,6 +49,7 @@ export default function Map(props) {
   const [currentPosition, setCurrentPosition] = useState({ lat: 33.6349, lng: -117.7405 });
   const [yelpResults, setYelpResults] = useState([]);
   const [selected, setSelected] = useState({});
+  const [clicked, setClicked] = useState(false);
 
   const success = position => {
     const currentPosition = {
@@ -66,6 +67,10 @@ export default function Map(props) {
 
   const onSelect = item => {
     setSelected(item);
+  };
+
+  const onCenterClick = () => {
+    setClicked(!clicked);
   };
 
   useEffect(() => {
@@ -122,7 +127,7 @@ export default function Map(props) {
           selected.location &&
           (
             <InfoWindow
-              position={{ lat: selected.coordinates.latitude, lng: selected.coordinates.longitude }}
+              position={{ lat: selected.coordinates.latitude + 0.005, lng: selected.coordinates.longitude }}
               clickable={true}
               onCloseClick={() => setSelected({})}
             >
@@ -137,7 +142,19 @@ export default function Map(props) {
         <Marker
           position={currentPosition}
           onDragEnd={e => onMarkerDragEnd(e)}
-          draggable={true} />
+          draggable={true}
+          onClick={onCenterClick} />
+        {
+          clicked &&
+          (
+            <InfoWindow
+              position={{ lat: currentPosition.lat + 0.005, lng: currentPosition.lng }}
+              clickable={true}
+            >
+              <h3 className='center-info'>Drag me to change center location!</h3>
+            </InfoWindow>
+          )
+        }
       </GoogleMap>
     </LoadScript>
   );

@@ -25,7 +25,7 @@ app.get('/api/yelp/search/:location', async (req, res, next) => {
     });
     res.status(200).send(response.jsonBody.businesses);
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 });
 

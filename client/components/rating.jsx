@@ -16,5 +16,5 @@ export default function Rating(props) {
   for (let i = 1; i <= emptyStar; i++) {
     arrayStars.push(<i key={`${i}-empty-star`} className="fa-regular fa-star theme-color star-size "></i>);
   }
-  return arrayStars.map(rating => rating);
+  return arrayStars;
 }
