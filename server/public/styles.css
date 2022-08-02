@@ -1,0 +1,19 @@
+.map-container {
+  width: 100%;
+  height: 100vh;
+}
+
+.info-image {
+  width: 100%;
+  height: auto;
+  max-height: 100px;
+  display: block;
+}
+
+.info-name {
+  margin: 0;
+}
+
+.theme-color {
+  color: #4b6869;
+}
