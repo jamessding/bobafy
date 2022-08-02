@@ -107,7 +107,7 @@ export default function Map(props) {
           mapContainerStyle={containerStyle}
           center={currentPosition}
           zoom={13}
-          options={{ styles }}
+          options={{ styles, disableDefaultUI: true, zoomControl: false, mapTypeControl: false }}
         >
           {
             yelpResults.map(result => {
