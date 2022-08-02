@@ -127,7 +127,7 @@ export default function Map(props) {
               onCloseClick={() => setSelected({})}
             >
               <>
-                <p>{selected.name}</p>
+                <h3 className='info-name'>{selected.name}</h3>
                 <Rating rating={selected.rating} />
                 <img className='info-image' src={selected.image_url}></img>
               </>
