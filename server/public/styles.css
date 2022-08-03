@@ -17,3 +17,16 @@
 .theme-color {
   color: #4b6869;
 }
+
+.list-container {
+  height: 100%;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  overflow: auto;
+}
+
+.img-fluid {
+  object-fit: cover;
+  height: 100%;
+}
