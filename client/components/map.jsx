@@ -51,6 +51,8 @@ export default function Map(props) {
   const [yelpResults, setYelpResults] = useState([]);
   const [selected, setSelected] = useState({});
   const [clicked, setClicked] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 540);
 
   const success = position => {
     const currentPosition = {
@@ -73,6 +75,21 @@ export default function Map(props) {
   const onCenterClick = () => {
     setClicked(!clicked);
   };
+
+  const onListClick = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleWindowSizeChange = () => {
+    setIsMobile(window.innerWidth <= 540);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
 
   useEffect(() => {
     navigator.geolocation.watchPosition(success);
@@ -159,8 +176,19 @@ export default function Map(props) {
           }
         </GoogleMap>
       </LoadScript>
-      <List results={yelpResults} />
+      <List isOpen={isOpen} isMobile={isMobile} results={yelpResults} />
+      {
+        !isOpen &&
+        (
+          <a onClick={onListClick} className="btn list-button theme-color shadow" href="#" role="button"><i className="fa-solid fa-list"></i>&nbsp;View List</a>
+        )
+      }
+      {
+        isOpen &&
+        (
+      <a onClick={onListClick} className="btn list-button theme-color shadow" href="#" role="button"><i className="fa-solid fa-map"></i>&nbsp;View Map</a>
+        )
+      }
     </>
-
   );
 }
