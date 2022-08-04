@@ -21,7 +21,8 @@ app.get('/api/yelp/search/:location', async (req, res, next) => {
   try {
     const response = await client.search({
       term: 'Bubble Tea',
-      location
+      location,
+      limit: 10
     });
     res.status(200).send(response.jsonBody.businesses);
   } catch (err) {

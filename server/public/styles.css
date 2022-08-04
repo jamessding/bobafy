@@ -17,3 +17,48 @@
 .theme-color {
   color: #4b6869;
 }
+
+.list-container {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 10px;
+  overflow-y: scroll;
+}
+
+.img-fluid {
+  object-fit: cover;
+  height: 100%;
+}
+
+.list-button {
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  background-color: white;
+  border-radius: 10px;
+  visibility: hidden;
+}
+
+@media only screen and (max-width: 540px) {
+  .list-button {
+    visibility: visible;
+  }
+
+  .list-container {
+    transition: transform 0.5s linear;
+    transform: translateX(-100%);
+  }
+}
+
+.transition-right {
+  left: -540px;
+  transition: transform 0.5s linear;
+  transform: translateX(100%);
+}
+
+.transition-left {
+  left: -540px;
+  transition: transform 0.5s linear;
+  transform: translateX(-100%);
+}
