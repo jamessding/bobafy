@@ -52,7 +52,6 @@ export default function Map(props) {
   const [selected, setSelected] = useState({});
   const [clicked, setClicked] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 540);
 
   const success = position => {
     const currentPosition = {
@@ -79,17 +78,6 @@ export default function Map(props) {
   const onListClick = () => {
     setIsOpen(!isOpen);
   };
-
-  const handleWindowSizeChange = () => {
-    setIsMobile(window.innerWidth <= 540);
-  };
-
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-      window.removeEventListener('resize', handleWindowSizeChange);
-    };
-  }, []);
 
   useEffect(() => {
     navigator.geolocation.watchPosition(success);
@@ -176,7 +164,7 @@ export default function Map(props) {
           }
         </GoogleMap>
       </LoadScript>
-      <List isOpen={isOpen} isMobile={isMobile} results={yelpResults} />
+      <List isOpen={isOpen} results={yelpResults} />
       {
         !isOpen &&
         (

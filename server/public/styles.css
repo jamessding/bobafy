@@ -19,11 +19,11 @@
 }
 
 .list-container {
-  height: 100%;
-  position: absolute;
+  height: 100vh;
+  position: fixed;
   top: 0;
   left: 10px;
-  overflow: auto;
+  overflow-y: scroll;
 }
 
 .img-fluid {
@@ -44,6 +44,11 @@
   .list-button {
     visibility: visible;
   }
+
+  .list-container {
+    transition: transform 0.5s linear;
+    transform: translateX(-100%);
+  }
 }
 
 .transition-right {
@@ -53,7 +58,7 @@
 }
 
 .transition-left {
-  left: 0;
+  left: -540px;
   transition: transform 0.5s linear;
   transform: translateX(-100%);
 }

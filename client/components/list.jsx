@@ -1,9 +1,9 @@
 import React from 'react';
 import Rating from './rating';
 
-export default function List({ isOpen, results, isMobile }) {
+export default function List({ isOpen, results }) {
   const listClassName = () => {
-    if (!isMobile) {
+    if (window.innerWidth > 540) {
       return 'list-container';
     } else if (isOpen) {
       return 'list-container transition-right';
