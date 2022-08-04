@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 require('dotenv/config');
 const path = require('path');
 const express = require('express');
@@ -25,6 +26,26 @@ app.get('/api/yelp/search/:location', async (req, res, next) => {
       limit: 10
     });
     res.status(200).send(response.jsonBody.businesses);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/yelp/:businessId', async (req, res, next) => {
+  const { businessId } = req.params;
+  if (!businessId) {
+    throw new ClientError(400, 'businessId is required');
+  }
+  try {
+    const response = await fetch(`https://api.yelp.com/v3/businesses/${businessId}`, {
+      method: 'GET',
+      headers: {
+        Authorization:
+          process.env.YELP_AUTHORIZATION
+      }
+    });
+    const details = await response.json();
+    res.status(200).send(details);
   } catch (err) {
     next(err);
   }
