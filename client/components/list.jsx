@@ -29,6 +29,7 @@ export default function List({ isOpen, results }) {
                     <p className="card-text"><small className="text-muted">{(result.distance / 1609.344).toFixed(1)}&nbsp;Miles</small></p>
                     <p className="card-text"><small className="text-muted">{result.location.address1},&nbsp;{result.location.city}</small></p>
                     <p className="card-text"><small className="text-muted">{result.transactions ? result.transactions.map(transaction => transaction[0].toUpperCase() + transaction.substring(1) + ' ') : null}</small></p>
+                    <a href={`#details?businessId=${result.id}`} className="stretched-link"></a>
                   </div>
                 </div>
               </div>

@@ -33,9 +33,6 @@ app.get('/api/yelp/search/:location', async (req, res, next) => {
 
 app.get('/api/yelp/:businessId', async (req, res, next) => {
   const { businessId } = req.params;
-  if (!businessId) {
-    throw new ClientError(400, 'businessId is required');
-  }
   try {
     const response = await fetch(`https://api.yelp.com/v3/businesses/${businessId}`, {
       method: 'GET',
