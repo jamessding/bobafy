@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default function Hours({ hours }) {
-
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   let counter = 0;
   const times = ['', '', '', '', '', '', ''];
@@ -24,9 +23,6 @@ export default function Hours({ hours }) {
       times[j] = 'Closed';
     }
   }
-  // console.log(times);
-  // console.log(hours);
-  // console.log(new Date().getDay());
   counter = 0;
   return (
     <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -55,6 +51,3 @@ export default function Hours({ hours }) {
     </div>
   );
 }
-
-// getDay Sunday = 0 Monday = 1
-// Yelp's Monday = 0 Tuesday = 1

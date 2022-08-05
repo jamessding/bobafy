@@ -75,4 +75,5 @@
 
 .hours-button {
   all: unset;
+  cursor: pointer;
 }

@@ -47,6 +47,10 @@ export default function Details(props) {
     }
   };
 
+  const day = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+  const endHour = details.hours[0]?.open[day].end.slice(0, 2);
+  const endMinutes = details.hours[0]?.open[day].end.slice(-2);
+
   if (detailsFound === true && details.name === '') {
     return <LoadAnimation />;
   }
@@ -79,15 +83,18 @@ export default function Details(props) {
             </button>
           </div>
         </div>
-        <div className='row pt-3 padding-left'>
+        <div className='row pt-4 padding-left'>
           <div className='col'>
             <h1>{details.name}</h1>
             <Rating rating={details.rating} />
-            <p>{details.review_count}</p>
+            <span>{details.review_count}</span>
             {
               details.hours[0]?.is_open_now &&
               (
-                <p><span className='text-success'>Open</span>&nbsp;until&nbsp;{details.hours[0].open[3].end}</p>
+                <p className='pt-2'>
+                  <span className='text-success'>Open</span>
+                  {` until ${endHour % 12}:${endMinutes} ${endHour >= 12 ? 'PM' : 'AM'}`}
+                </p>
               )
             }
             {
@@ -98,7 +105,8 @@ export default function Details(props) {
             }
           </div>
         </div>
-        <div className='row align-items-center'>
+        <hr />
+        <div className='row pt-3'>
           <div className='col text-center'>
             <i className="fa-solid fa-circle-plus theme-color fa-2xl"></i>
             <p className='pt-1'>Review</p>
@@ -111,7 +119,7 @@ export default function Details(props) {
           </div>
           <div className='col text-center'>
             <button type="button" className="hours-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              <i className="fa-regular fa-clock theme-color fa-2xl"></i>
+              <i className="fa-solid fa-clock theme-color fa-2xl"></i>
             </button>
             <p className='pt-1'>Hours</p>
           </div>
@@ -122,6 +130,7 @@ export default function Details(props) {
             <p className='pt-1'>Directions</p>
           </div>
         </div>
+        <hr />
         <Hours hours={details.hours[0].open} />
       </>
     );
