@@ -62,3 +62,17 @@
   transition: transform 0.5s linear;
   transform: translateX(-100%);
 }
+
+.carousel-img {
+  height: 300px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.padding-left {
+  padding-left: 7%;
+}
+
+.hours-button {
+  all: unset;
+}
