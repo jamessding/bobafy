@@ -4,6 +4,7 @@ import Rating from '../components/rating';
 import NotFound from './not-found';
 import LoadAnimation from '../components/loadAnimation';
 import Hours from '../components/hours';
+import Review from '../components/review';
 
 export default function Details(props) {
 
@@ -108,7 +109,9 @@ export default function Details(props) {
         <hr />
         <div className='row pt-3'>
           <div className='col text-center'>
-            <i className="fa-solid fa-circle-plus theme-color fa-2xl"></i>
+            <button type="button" className="review-button" data-bs-toggle="modal" data-bs-target="#reviewModal">
+              <i className="fa-solid fa-circle-plus theme-color fa-2xl"></i>
+            </button>
             <p className='pt-1'>Review</p>
           </div>
           <div className='col text-center'>
@@ -118,7 +121,7 @@ export default function Details(props) {
             <p className='pt-1'>Call</p>
           </div>
           <div className='col text-center'>
-            <button type="button" className="hours-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" className="hours-button" data-bs-toggle="modal" data-bs-target="#hoursModal">
               <i className="fa-solid fa-clock theme-color fa-2xl"></i>
             </button>
             <p className='pt-1'>Hours</p>
@@ -132,6 +135,7 @@ export default function Details(props) {
         </div>
         <hr />
         <Hours hours={details.hours[0].open} />
+        <Review name={details.name} />
       </>
     );
   }
