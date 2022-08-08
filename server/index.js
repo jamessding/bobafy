@@ -61,13 +61,14 @@ app.get('/api/yelp/:businessId', async (req, res, next) => {
 
 app.post('/api/reviews', async (req, res, next) => {
   // const { userId } = req.user;
-  // if (!userId) {
-  //   throw new ClientError(401, 'invalid credentials');
-  // }
-  const { userId, businessId, imageUrl, content, drinkType, recommend } = req.body;
-  // if (!drinkType) {
-  //   throw new ClientError(400, 'drink type is required');
-  // }
+  const userId = 1; // change when sign in implemented AppContext
+  if (!userId) {
+    throw new ClientError(401, 'invalid credentials');
+  }
+  const { businessId, imageUrl, content, drinkType, recommend } = req.body;
+  if (!drinkType) {
+    throw new ClientError(400, 'drink type is required');
+  }
   const sql = `
     insert into "reviews" ("userId", "storeId", "imageUrl", "content", "drinkType", "recommend")
     values ($1, $2, $3, $4, $5, $6)

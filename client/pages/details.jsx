@@ -16,12 +16,19 @@ export default function Details(props) {
     phone: '',
     photos: [],
     hours: [],
-    location: ''
+    location: '',
+    businessId: ''
   });
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     handleDetails();
   }, []);
+
+  function addToReviews(review) {
+    const updatedReviews = reviews.concat(review);
+    setReviews(updatedReviews);
+  }
 
   const handleDetails = async () => {
     const { params } = parseRoute(window.location.hash);
@@ -40,6 +47,7 @@ export default function Details(props) {
           phone: details.phone,
           photos: details.photos,
           hours: details.hours,
+          businessId,
           location: `${details.coordinates?.latitude},${details.coordinates?.longitude}`
         }), 3000);
       }
@@ -135,7 +143,7 @@ export default function Details(props) {
         </div>
         <hr />
         <Hours hours={details.hours[0].open} />
-        <Review name={details.name} />
+        <Review onSubmit={addToReviews} name={details.name} businessId={details.businessId} />
       </>
     );
   }
