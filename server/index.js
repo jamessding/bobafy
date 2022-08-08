@@ -4,10 +4,21 @@ const path = require('path');
 const express = require('express');
 const errorMiddleware = require('./error-middleware');
 const ClientError = require('./client-error');
+const pg = require('pg');
 const app = express();
 const publicPath = path.join(__dirname, 'public');
 const yelp = require('yelp-fusion');
 const client = yelp.client(process.env.YELP_NPM_AUTHORIZATION);
+
+const db = new pg.Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+app.use(express.json());
+
 if (process.env.NODE_ENV === 'development') {
   app.use(require('./dev-middleware')(publicPath));
 } else {
@@ -43,6 +54,30 @@ app.get('/api/yelp/:businessId', async (req, res, next) => {
     });
     const details = await response.json();
     res.status(200).send(details);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/api/reviews', async (req, res, next) => {
+  // const { userId } = req.user;
+  // if (!userId) {
+  //   throw new ClientError(401, 'invalid credentials');
+  // }
+  const { userId, businessId, imageUrl, content, drinkType, recommend } = req.body;
+  // if (!drinkType) {
+  //   throw new ClientError(400, 'drink type is required');
+  // }
+  const sql = `
+    insert into "reviews" ("userId", "storeId", "imageUrl", "content", "drinkType", "recommend")
+    values ($1, $2, $3, $4, $5, $6)
+    returning *
+    `;
+  const params = [userId, businessId, imageUrl, content, drinkType, recommend];
+  try {
+    const result = await db.query(sql, params);
+    const [reviews] = result.rows;
+    res.status(201).json(reviews);
   } catch (err) {
     next(err);
   }

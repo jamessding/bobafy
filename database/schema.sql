@@ -21,8 +21,8 @@ CREATE TABLE "users" (
 
 
 CREATE TABLE "stores" (
-	"storeId" serial NOT NULL,
-	"storeName" serial NOT NULL,
+	"storeId" TEXT NOT NULL,
+	"storeName" TEXT NOT NULL,
 	CONSTRAINT "stores_pk" PRIMARY KEY ("storeId")
 ) WITH (
   OIDS=FALSE
@@ -33,7 +33,7 @@ CREATE TABLE "stores" (
 CREATE TABLE "reviews" (
 	"reviewId" serial NOT NULL,
 	"userId" int NOT NULL,
-	"storeId" int NOT NULL,
+	"storeId" TEXT NOT NULL,
 	"createdAt" timestamptz(6) NOT NULL DEFAULT now(),
 	"imageUrl" TEXT NOT NULL,
 	"content" TEXT NOT NULL,
