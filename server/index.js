@@ -59,9 +59,25 @@ app.get('/api/yelp/:businessId', async (req, res, next) => {
   }
 });
 
+app.get('/api/reviews/:businessId', async (req, res, next) => {
+  const { businessId } = req.params;
+  const sql = `
+  select *
+    from "reviews"
+   where "storeId" = $1;
+  `;
+  const params = [businessId];
+  try {
+    const result = await db.query(sql, params);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.post('/api/reviews', async (req, res, next) => {
-  // const { userId } = req.user;
-  const userId = 1; // change when sign in implemented AppContext
+  // const { userId } = req.user; --change when sign in implemented AppContext
+  const userId = 1;
   if (!userId) {
     throw new ClientError(401, 'invalid credentials');
   }

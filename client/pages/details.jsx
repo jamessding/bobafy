@@ -21,14 +21,21 @@ export default function Details(props) {
   });
   const [reviews, setReviews] = useState([]);
 
-  useEffect(() => {
-    handleDetails();
-  }, []);
-
   function addToReviews(review) {
     const updatedReviews = reviews.concat(review);
     setReviews(updatedReviews);
   }
+
+  const getReviews = async () => {
+    try {
+      const response = await fetch(`/api/reviews/${details.businessId}`);
+      const reviewData = await response.json();
+
+      setReviews(reviewData);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleDetails = async () => {
     const { params } = parseRoute(window.location.hash);
@@ -55,6 +62,14 @@ export default function Details(props) {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    handleDetails();
+  }, []);
+
+  useEffect(() => {
+    getReviews();
+  }, []);
 
   const day = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
   const endHour = details.hours[0]?.open[day].end.slice(0, 2);
