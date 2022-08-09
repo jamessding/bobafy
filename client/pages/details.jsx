@@ -4,11 +4,13 @@ import Rating from '../components/rating';
 import NotFound from './not-found';
 import LoadAnimation from '../components/loadAnimation';
 import Hours from '../components/hours';
-import Review from '../components/review';
+import ReviewModal from '../components/reviewModal';
+import Reviews from '../components/reviews';
 
 export default function Details(props) {
 
   const [detailsFound, setDetailsFound] = useState(true);
+  const [reviews, setReviews] = useState([]);
   const [details, setDetails] = useState({
     name: '',
     rating: null,
@@ -19,23 +21,11 @@ export default function Details(props) {
     location: '',
     businessId: ''
   });
-  const [reviews, setReviews] = useState([]);
 
   function addToReviews(review) {
     const updatedReviews = reviews.concat(review);
     setReviews(updatedReviews);
   }
-
-  const getReviews = async () => {
-    try {
-      const response = await fetch(`/api/reviews/${details.businessId}`);
-      const reviewData = await response.json();
-
-      setReviews(reviewData);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const handleDetails = async () => {
     const { params } = parseRoute(window.location.hash);
@@ -68,8 +58,20 @@ export default function Details(props) {
   }, []);
 
   useEffect(() => {
+    const getReviews = async () => {
+      if (details.businessId === '') {
+        return;
+      }
+      try {
+        const response = await fetch(`/api/reviews/${details.businessId}`);
+        const reviewData = await response.json();
+        setReviews(reviewData);
+      } catch (err) {
+        console.error(err);
+      }
+    };
     getReviews();
-  }, []);
+  }, [details.businessId]);
 
   const day = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
   const endHour = details.hours[0]?.open[day].end.slice(0, 2);
@@ -157,8 +159,14 @@ export default function Details(props) {
           </div>
         </div>
         <hr />
+        <div className='row pt-3'>
+          <div className='col padding-left'>
+            <h2>Reviews</h2>
+          </div>
+        </div>
+        <Reviews reviews={reviews} />
         <Hours hours={details.hours[0].open} />
-        <Review onSubmit={addToReviews} name={details.name} businessId={details.businessId} />
+        <ReviewModal onSubmit={addToReviews} name={details.name} businessId={details.businessId} />
       </>
     );
   }

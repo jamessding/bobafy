@@ -4,6 +4,7 @@ const path = require('path');
 const express = require('express');
 const errorMiddleware = require('./error-middleware');
 const ClientError = require('./client-error');
+const uploadsMiddleware = require('./uploads-middleware');
 const pg = require('pg');
 const app = express();
 const publicPath = path.join(__dirname, 'public');
@@ -98,6 +99,40 @@ app.post('/api/reviews', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
+  const { caption, reviewId } = req.body;
+  if (!caption) {
+    throw new ClientError(400, 'caption is a required field');
+  }
+  const url = `/images/${req.file.filename}`;
+  const sql = `
+    update "reviews"
+       set "caption" = $1,
+        "imageUrl" = $2
+     where "reviews"."reviewId" = $3
+    returning *
+  `;
+  const params = [caption, url, reviewId];
+  db.query(sql, params)
+    .then(result => {
+      const [file] = result.rows;
+      res.status(201).json(file);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/images', (req, res, next) => {
+  const sql = `
+    select *
+      from "images"
+  `;
+  db.query(sql)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => next(err));
 });
 
 app.use(errorMiddleware);
