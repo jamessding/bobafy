@@ -36,8 +36,7 @@ CREATE TABLE "reviews" (
 	"storeId" TEXT NOT NULL,
 	"createdAt" timestamptz(6) NOT NULL DEFAULT now(),
 	"imageUrl" TEXT,
-  "caption" TEXT,
-	"content" TEXT NOT NULL,
+	"content" TEXT,
 	"drinkType" TEXT NOT NULL,
 	"recommend" BOOLEAN NOT NULL DEFAULT 'false',
 	CONSTRAINT "reviews_pk" PRIMARY KEY ("reviewId")

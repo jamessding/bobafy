@@ -76,16 +76,17 @@ app.get('/api/reviews/:businessId', async (req, res, next) => {
   }
 });
 
-app.post('/api/reviews', async (req, res, next) => {
+app.post('/api/reviews', uploadsMiddleware, async (req, res, next) => {
   // const { userId } = req.user; --change when sign in implemented AppContext
   const userId = 1;
   if (!userId) {
     throw new ClientError(401, 'invalid credentials');
   }
-  const { businessId, imageUrl, content, drinkType, recommend } = req.body;
-  if (!drinkType) {
-    throw new ClientError(400, 'drink type is required');
+  const { businessId, content, drinkType, recommend } = req.body;
+  if (!drinkType || !recommend || !content) {
+    throw new ClientError(400, 'please fill out the required fields');
   }
+  const imageUrl = `/images/${req.file.filename}`;
   const sql = `
     insert into "reviews" ("userId", "storeId", "imageUrl", "content", "drinkType", "recommend")
     values ($1, $2, $3, $4, $5, $6)
@@ -99,28 +100,6 @@ app.post('/api/reviews', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
-
-app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
-  const { caption, reviewId } = req.body;
-  if (!caption) {
-    throw new ClientError(400, 'caption is a required field');
-  }
-  const url = `/images/${req.file.filename}`;
-  const sql = `
-    update "reviews"
-       set "caption" = $1,
-        "imageUrl" = $2
-     where "reviews"."reviewId" = $3
-    returning *
-  `;
-  const params = [caption, url, reviewId];
-  db.query(sql, params)
-    .then(result => {
-      const [file] = result.rows;
-      res.status(201).json(file);
-    })
-    .catch(err => next(err));
 });
 
 app.get('/api/images', (req, res, next) => {

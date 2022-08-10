@@ -1,46 +1,26 @@
 import React, { useState, useRef } from 'react';
 
 export default function ReviewModal({ onSubmit, name, businessId }) {
-
   const [drinkType, setDrinkType] = useState('Milk Tea');
   const [content, setContent] = useState('');
   const [recommend, setRecommend] = useState(false);
-  const [caption, setCaption] = useState('');
   const fileInputRef = useRef(null);
 
   const handleSubmit = async event => {
     event.preventDefault();
-    const body = { drinkType, content, recommend, businessId };
-    const req = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    };
-    try {
-      const response = await fetch('/api/reviews', req);
-      const review = await response.json();
-      onSubmit(review);
-      handleFileUpload(review.reviewId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleFileUpload = async reviewId => {
     const formData = new FormData();
-    formData.append('caption', caption);
     formData.append('image', fileInputRef.current.files[0]);
-    formData.append('reviewId', reviewId);
+    formData.append('drinkType', drinkType);
+    formData.append('content', content);
+    formData.append('recommend', recommend);
+    formData.append('businessId', businessId);
     try {
-      const response = await fetch('/api/uploads', {
+      const response = await fetch('/api/reviews', {
         method: 'POST',
         body: formData
       });
       const review = await response.json();
       onSubmit(review);
-      setCaption('');
       fileInputRef.current.value = null;
     } catch (err) {
       console.error(err);
@@ -69,20 +49,6 @@ export default function ReviewModal({ onSubmit, name, businessId }) {
               <div className="mb-3">
                 <label htmlFor="exampleFormControlTextarea1" className="form-label">How was your experience?</label>
                 <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={content} onChange={event => setContent(event.target.value)}></textarea>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="username" className="form-label">
-                  Caption
-                </label>
-                <input
-                  required
-                  autoFocus
-                  type="text"
-                  id="caption"
-                  name="caption"
-                  value={caption}
-                  onChange={event => setCaption(event.target.value)}
-                  className="form-control bg-light" />
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <input

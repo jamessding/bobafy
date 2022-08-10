@@ -4,5 +4,5 @@ values (1, 'admin', '$argon2i$v=19$m=4096,t=3,p=1$h7icQD/xZr8akZsX+hNA0A$h68atJW
 insert into "stores" ("storeId", "storeName")
 values('1zWNM2R5NEKtSrc57FYhsQ', 'Taicha');
 
-insert into "reviews" ("userId", "storeId", "imageUrl", "content", "drinkType", "recommend", "caption")
-values (1, '1zWNM2R5NEKtSrc57FYhsQ', 'https://s3-media0.fl.yelpcdn.com/bphoto/JQAjIOMZA9DhHYNlLIndAQ/300s.jpg', 'My personal favorite is the White Peach Oolong with boba, 50% sweet!', 'Fruit Tea', true, 'peach tea');
+insert into "reviews" ("userId", "storeId", "imageUrl", "content", "drinkType", "recommend")
+values (1, '1zWNM2R5NEKtSrc57FYhsQ', 'https://s3-media0.fl.yelpcdn.com/bphoto/JQAjIOMZA9DhHYNlLIndAQ/300s.jpg', 'My personal favorite is the White Peach Oolong with boba, 50% sweet!', 'Fruit Tea', true);
