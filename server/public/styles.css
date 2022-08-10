@@ -18,6 +18,10 @@
   color: #4b6869;
 }
 
+.bg-theme {
+  background-color: #4b6869;
+}
+
 .list-container {
   height: 100vh;
   position: fixed;
@@ -73,7 +77,16 @@
   padding-left: 7%;
 }
 
-.hours-button {
+.hours-button,
+.review-button {
   all: unset;
   cursor: pointer;
+}
+
+.avatar-image,
+.review-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: grey 1px solid;
 }

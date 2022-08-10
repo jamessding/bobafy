@@ -4,10 +4,13 @@ import Rating from '../components/rating';
 import NotFound from './not-found';
 import LoadAnimation from '../components/loadAnimation';
 import Hours from '../components/hours';
+import ReviewModal from '../components/reviewModal';
+import Reviews from '../components/reviews';
 
 export default function Details(props) {
 
   const [detailsFound, setDetailsFound] = useState(true);
+  const [reviews, setReviews] = useState([]);
   const [details, setDetails] = useState({
     name: '',
     rating: null,
@@ -15,12 +18,14 @@ export default function Details(props) {
     phone: '',
     photos: [],
     hours: [],
-    location: ''
+    location: '',
+    businessId: ''
   });
 
-  useEffect(() => {
-    handleDetails();
-  }, []);
+  function addToReviews(review) {
+    const updatedReviews = reviews.concat(review);
+    setReviews(updatedReviews);
+  }
 
   const handleDetails = async () => {
     const { params } = parseRoute(window.location.hash);
@@ -39,6 +44,7 @@ export default function Details(props) {
           phone: details.phone,
           photos: details.photos,
           hours: details.hours,
+          businessId,
           location: `${details.coordinates?.latitude},${details.coordinates?.longitude}`
         }), 3000);
       }
@@ -46,6 +52,26 @@ export default function Details(props) {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    handleDetails();
+  }, []);
+
+  useEffect(() => {
+    const getReviews = async () => {
+      if (details.businessId === '') {
+        return;
+      }
+      try {
+        const response = await fetch(`/api/reviews/${details.businessId}`);
+        const reviewData = await response.json();
+        setReviews(reviewData);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getReviews();
+  }, [details.businessId]);
 
   const day = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
   const endHour = details.hours[0]?.open[day].end.slice(0, 2);
@@ -108,7 +134,9 @@ export default function Details(props) {
         <hr />
         <div className='row pt-3'>
           <div className='col text-center'>
-            <i className="fa-solid fa-circle-plus theme-color fa-2xl"></i>
+            <button type="button" className="review-button" data-bs-toggle="modal" data-bs-target="#reviewModal">
+              <i className="fa-solid fa-circle-plus theme-color fa-2xl"></i>
+            </button>
             <p className='pt-1'>Review</p>
           </div>
           <div className='col text-center'>
@@ -118,7 +146,7 @@ export default function Details(props) {
             <p className='pt-1'>Call</p>
           </div>
           <div className='col text-center'>
-            <button type="button" className="hours-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" className="hours-button" data-bs-toggle="modal" data-bs-target="#hoursModal">
               <i className="fa-solid fa-clock theme-color fa-2xl"></i>
             </button>
             <p className='pt-1'>Hours</p>
@@ -131,7 +159,14 @@ export default function Details(props) {
           </div>
         </div>
         <hr />
+        <div className='row pt-3'>
+          <div className='col padding-left'>
+            <h2>Reviews</h2>
+          </div>
+        </div>
+        <Reviews reviews={reviews} />
         <Hours hours={details.hours[0].open} />
+        <ReviewModal onSubmit={addToReviews} name={details.name} businessId={details.businessId} />
       </>
     );
   }
