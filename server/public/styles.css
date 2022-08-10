@@ -1,8 +1,3 @@
-.map-container {
-  width: 100%;
-  height: 100vh;
-}
-
 .info-image {
   width: 100%;
   height: auto;
@@ -22,10 +17,14 @@
   background-color: #4b6869;
 }
 
+.navbar-brand {
+  font-size: 28px;
+}
+
 .list-container {
-  height: 100vh;
+  height: 93vh;
   position: fixed;
-  top: 0;
+  top: 7vh;
   left: 10px;
   overflow-y: scroll;
 }
@@ -78,7 +77,8 @@
 }
 
 .hours-button,
-.review-button {
+.review-button,
+.menu-button {
   all: unset;
   cursor: pointer;
 }
