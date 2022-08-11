@@ -14,11 +14,13 @@ export default function Navbar(props) {
 
         <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
           <div className="offcanvas-header">
-            <h5 id="offcanvasRightLabel">Offcanvas right</h5>
+            <h2 id="offcanvasRightLabel">Menu</h2>
             <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
           <div className="offcanvas-body">
-            ...
+            <h5 className='mb-3'>Activity</h5>
+            <h5 className='mb-3'>Settings</h5>
+            <h5 className='mb-3'>Sign Out</h5>
           </div>
         </div>
       </div>

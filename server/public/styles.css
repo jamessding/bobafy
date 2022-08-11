@@ -1,3 +1,9 @@
+* {
+  font-family:
+    Poppins,
+    sans-serif;
+}
+
 .info-image {
   width: 100%;
   height: auto;
@@ -19,12 +25,15 @@
 
 .navbar-brand {
   font-size: 28px;
+  font-family:
+    "Sansita Swashed",
+    cursive;
 }
 
 .list-container {
-  height: 93vh;
+  height: 92vh;
   position: fixed;
-  top: 7vh;
+  top: 8vh;
   left: 10px;
   overflow-y: scroll;
 }

@@ -30,7 +30,7 @@ const storage = multerS3({
 // create the middleware
 const uploadsMiddleware = multer({
   storage
-}).single('file-to-upload');
+}).single('image');
 
 // the string argument to .single() is the file's field name
 // it matches the <input name="file-to-upload" type="file"/>

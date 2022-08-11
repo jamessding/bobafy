@@ -86,13 +86,13 @@ app.post('/api/reviews', uploadsMiddleware, async (req, res, next) => {
   if (!drinkType || !recommend || !content) {
     throw new ClientError(400, 'please fill out the required fields');
   }
-  const imageUrl = `/images/${req.file.filename}`;
+  const fileUrl = req.file.location; // The S3 url to access the uploaded file later
   const sql = `
     insert into "reviews" ("userId", "storeId", "imageUrl", "content", "drinkType", "recommend")
     values ($1, $2, $3, $4, $5, $6)
     returning *
     `;
-  const params = [userId, businessId, imageUrl, content, drinkType, recommend];
+  const params = [userId, businessId, fileUrl, content, drinkType, recommend];
   try {
     const result = await db.query(sql, params);
     const [reviews] = result.rows;
