@@ -18,9 +18,9 @@ export default function Navbar(props) {
             <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
           <div className="offcanvas-body">
-            <h5 className='mb-3'>Activity</h5>
-            <h5 className='mb-3'>Settings</h5>
-            <h5 className='mb-3'>Sign Out</h5>
+            <a href='#activity' className="nav-link mb-3 d-block">Activity</a>
+            <a href='#settings' className="nav-link mb-3 d-block">Settings</a>
+            <a href='#' className="nav-link mb-3 d-block">Sign Out</a>
           </div>
         </div>
       </div>

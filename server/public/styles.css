@@ -1,7 +1,12 @@
-* {
+body {
   font-family:
     Poppins,
     sans-serif;
+  padding-right: 0 !important;
+}
+
+.container {
+  max-width: 500px;
 }
 
 .info-image {
@@ -87,7 +92,8 @@
 
 .hours-button,
 .review-button,
-.menu-button {
+.menu-button,
+.nav-link {
   all: unset;
   cursor: pointer;
 }
@@ -98,4 +104,12 @@
   height: 80px;
   border-radius: 50%;
   border: grey 1px solid;
+}
+
+.settings-input {
+  all: unset;
+}
+
+.margin-bottom {
+  margin-bottom: 2rem;
 }
