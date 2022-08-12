@@ -13,6 +13,7 @@ CREATE TABLE "users" (
 	"firstName" TEXT,
 	"lastName" TEXT,
 	"avatarUrl" TEXT,
+  "email" TEXT,
 	CONSTRAINT "users_pk" PRIMARY KEY ("userId")
 ) WITH (
   OIDS=FALSE

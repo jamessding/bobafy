@@ -98,8 +98,13 @@ body {
   cursor: pointer;
 }
 
+.change-button {
+  cursor: pointer;
+}
+
 .avatar-image,
-.review-image {
+.review-image,
+.preview-image {
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -112,4 +117,18 @@ body {
 
 .margin-bottom {
   margin-bottom: 2rem;
+}
+
+.orange-button {
+  background-color: #e3913f;
+  color: white;
+  border-radius: 10px;
+  padding: 0.5rem;
+}
+
+.file {
+  opacity: 0;
+  width: 0.1px;
+  height: 0.1px;
+  position: absolute;
 }

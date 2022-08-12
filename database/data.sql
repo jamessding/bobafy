@@ -1,5 +1,5 @@
-insert into "users" ("userId", "username", "hashedPassword", "firstName", "lastName", "avatarUrl")
-values (1, 'admin', '$argon2i$v=19$m=4096,t=3,p=1$h7icQD/xZr8akZsX+hNA0A$h68atJWyjvunAwNOpSpMfg9sPvoMQ6dKwoh0dJhurWA', 'James', 'Ding', 'https://avatars.githubusercontent.com/u/103629526?v=4');
+insert into "users" ("userId", "username", "hashedPassword", "firstName", "lastName", "avatarUrl", "email")
+values (1, 'admin', '$argon2i$v=19$m=4096,t=3,p=1$h7icQD/xZr8akZsX+hNA0A$h68atJWyjvunAwNOpSpMfg9sPvoMQ6dKwoh0dJhurWA', 'James', 'Ding', 'https://avatars.githubusercontent.com/u/103629526?v=4', 'jamesding@example.com');
 
 insert into "stores" ("storeId", "storeName")
 values('1zWNM2R5NEKtSrc57FYhsQ', 'Taicha');
