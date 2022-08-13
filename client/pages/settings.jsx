@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/navbar';
 
 export default function Settings(props) {
-  const [userDetails, setUserDetails] = useState({});
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const fileInputRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState();
 
   useEffect(() => {
     getUserDetails();
@@ -23,7 +23,10 @@ export default function Settings(props) {
       })
         .then(res => res.json())
         .then(result => {
-          setUserDetails(result);
+          setFirstName(result[0].firstName);
+          setLastName(result[0].lastName);
+          setEmail(result[0].email);
+          setAvatarUrl(result[0].avatarUrl);
         });
     } catch (err) {
       console.error(err);
@@ -32,45 +35,46 @@ export default function Settings(props) {
 
   const handleFileChange = e => {
     if (e.target.files && e.target.files.length > 0) {
-      setAvatarUrl(e.target.files[0]);
+      setSelectedImage(e.target.files[0]);
     }
   };
 
-  // for submitting changes in settings
-  // const handleSubmit = async event => {
-  //   event.preventDefault();
-  //   const formData = new FormData();
-  //   formData.append('image', fileInputRef.current.files[0]);
-  //   formData.append('drinkType', drinkType);
-  //   formData.append('content', content);
-  //   formData.append('recommend', recommend);
-  //   formData.append('businessId', businessId);
-  //   try {
-  //     const response = await fetch('/api/reviews', {
-  //       method: 'POST',
-  //       body: formData
-  //     });
-  //     const review = await response.json();
-  //     onSubmit(review);
-  //     fileInputRef.current.value = null;
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+  const handleSubmit = async event => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append('image', fileInputRef.current.files[0]);
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
+    formData.append('email', email);
+    try {
+      const response = await fetch('/api/settings', {
+        method: 'POST',
+        body: formData
+      });
+      const result = await response.json();
+      setFirstName(result.firstName);
+      setLastName(result.lastName);
+      setEmail(result.email);
+      setAvatarUrl(result.avatarUrl);
+      fileInputRef.current.value = null;
+      window.location.hash = '#';
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
       <Navbar />
       <div className='container'>
         <h1 className='text-center m-5'>Settings</h1>
-        <form>
-          {/* onSubmit={handleSubmit} */}
+        <form onSubmit={handleSubmit}>
           <div className='row'>
             <div className='col ms-3'>
               <p>First Name</p>
             </div>
             <div className='col text-end me-3'>
-              <input onChange={event => setFirstName(event.target.value)} className='settings-input' defaultValue={userDetails[0]?.firstName} type='text'></input>
+              <input onChange={event => setFirstName(event.target.value)} className='settings-input' defaultValue={firstName} type='text'></input>
             </div>
           </div>
           <hr className='margin-bottom'></hr>
@@ -79,7 +83,7 @@ export default function Settings(props) {
               <p>Last Name</p>
             </div>
             <div className='col text-end me-3'>
-              <input onChange={event => setLastName(event.target.value)} className='settings-input' defaultValue={userDetails[0]?.lastName} type='text'></input>
+              <input onChange={event => setLastName(event.target.value)} className='settings-input' defaultValue={lastName} type='text'></input>
             </div>
           </div>
           <hr className='margin-bottom'></hr>
@@ -88,7 +92,7 @@ export default function Settings(props) {
               <p>Email</p>
             </div>
             <div className='col text-end me-3'>
-              <input onChange={event => setEmail(event.target.value)}className='settings-input' size='35' defaultValue={userDetails[0]?.email} type='text'></input>
+              <input onChange={event => setEmail(event.target.value)}className='settings-input' size='35' defaultValue={email} type='text'></input>
             </div>
           </div>
           <hr></hr>
@@ -107,16 +111,16 @@ export default function Settings(props) {
                 onChange={handleFileChange}
                 accept=".png, .jpg, .jpeg, .gif" />
               {
-                !avatarUrl
+                !selectedImage
                   ? (
-                  <img className='preview-image' src={userDetails[0]?.avatarUrl} />
+                  <img className='preview-image' src={avatarUrl} />
                     )
-                  : <img className='preview-image' src={URL.createObjectURL(avatarUrl)} />
+                  : <img className='preview-image' src={URL.createObjectURL(selectedImage)} />
               }
             </div>
           </div>
-          <hr></hr>
-          <div className='mb-3 text-center'>
+          <hr className='margin-bottom'></hr>
+          <div className='text-center'>
             <button className='orange-button'>Save Changes</button>
           </div>
         </form>
