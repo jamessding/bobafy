@@ -10,20 +10,11 @@ CREATE TABLE "users" (
 	"userId" serial NOT NULL,
 	"username" TEXT NOT NULL,
 	"hashedPassword" TEXT NOT NULL,
-	"firstName" TEXT NOT NULL,
-	"lastName" TEXT NOT NULL,
-	"avatarUrl" TEXT NOT NULL,
+	"firstName" TEXT,
+	"lastName" TEXT,
+	"avatarUrl" TEXT,
+  "email" TEXT,
 	CONSTRAINT "users_pk" PRIMARY KEY ("userId")
-) WITH (
-  OIDS=FALSE
-);
-
-
-
-CREATE TABLE "stores" (
-	"storeId" TEXT NOT NULL,
-	"storeName" TEXT NOT NULL,
-	CONSTRAINT "stores_pk" PRIMARY KEY ("storeId")
 ) WITH (
   OIDS=FALSE
 );
@@ -69,7 +60,6 @@ CREATE TABLE "comments" (
 
 
 ALTER TABLE "reviews" ADD CONSTRAINT "reviews_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
-ALTER TABLE "reviews" ADD CONSTRAINT "reviews_fk1" FOREIGN KEY ("storeId") REFERENCES "stores"("storeId");
 
 ALTER TABLE "likes" ADD CONSTRAINT "likes_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
 ALTER TABLE "likes" ADD CONSTRAINT "likes_fk1" FOREIGN KEY ("reviewId") REFERENCES "reviews"("reviewId");

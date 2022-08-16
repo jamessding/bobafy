@@ -6,7 +6,7 @@ import List from './list';
 
 const containerStyle = {
   width: '100%',
-  height: '100vh'
+  height: '93vh'
 };
 
 const styles = [

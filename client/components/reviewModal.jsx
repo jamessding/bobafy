@@ -1,18 +1,28 @@
 import React, { useState, useRef } from 'react';
 
 export default function ReviewModal({ onSubmit, name, businessId }) {
-  const [drinkType, setDrinkType] = useState('Milk Tea');
-  const [content, setContent] = useState('');
-  const [recommend, setRecommend] = useState(false);
   const fileInputRef = useRef(null);
+  const [review, setReview] = useState({
+    drinkType: 'Milk Tea',
+    content: '',
+    recommend: false
+  });
+
+  const handleChange = e => {
+    setReview(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleRecommend = e => {
+    setReview(prev => ({ ...prev, [e.target.name]: e.target.checked }));
+  };
 
   const handleSubmit = async event => {
     event.preventDefault();
     const formData = new FormData();
     formData.append('image', fileInputRef.current.files[0]);
-    formData.append('drinkType', drinkType);
-    formData.append('content', content);
-    formData.append('recommend', recommend);
+    formData.append('drinkType', review.drinkType);
+    formData.append('content', review.content);
+    formData.append('recommend', review.recommend);
     formData.append('businessId', businessId);
     try {
       const response = await fetch('/api/reviews', {
@@ -39,7 +49,7 @@ export default function ReviewModal({ onSubmit, name, businessId }) {
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
                 <label htmlFor="exampleSelectType" className="form-label">What kind of boba did you order?</label>
-                <select required className="form-select" id="exampleSelectType" aria-label="Default select example" value={drinkType} onChange={event => setDrinkType(event.target.value)}>
+                <select name='drinkType' required className="form-select" id="exampleSelectType" aria-label="Default select example" value={review.drinkType} onChange={handleChange}>
                   <option value="Milk Tea">Milk Tea</option>
                   <option value="Fruit Tea">Fruit Tea</option>
                   <option value="Fresh Tea">Fresh Tea</option>
@@ -48,7 +58,7 @@ export default function ReviewModal({ onSubmit, name, businessId }) {
               </div>
               <div className="mb-3">
                 <label htmlFor="exampleFormControlTextarea1" className="form-label">How was your experience?</label>
-                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={content} onChange={event => setContent(event.target.value)}></textarea>
+                <textarea name='content' className="form-control" id="exampleFormControlTextarea1" rows="3" value={review.content} onChange={handleChange}></textarea>
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <input
@@ -60,8 +70,8 @@ export default function ReviewModal({ onSubmit, name, businessId }) {
               </div>
               <div className="mb-3">
                 <div className="form-check form-switch">
-                  <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" value={recommend}
-                    onChange={event => setRecommend(event.target.checked)}/>
+                  <input name='recommend' className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" value={review.recommend}
+                    onChange={handleRecommend}/>
                     <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Would you recommend this to a friend?</label>
                 </div>
               </div>

@@ -3,6 +3,7 @@ import Home from './pages/home';
 import Details from './pages/details';
 import NotFound from './pages/not-found';
 import parseRoute from './lib/parse-route';
+import Settings from './pages/settings';
 
 function usePrevious(value) {
   const ref = useRef();
@@ -40,6 +41,8 @@ export default function App(props) {
       return <Home />;
     } else if (path.includes('details')) {
       return <Details />;
+    } else if (path.includes('settings')) {
+      return <Settings />;
     } else {
       return <NotFound />;
     }
