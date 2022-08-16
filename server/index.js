@@ -77,7 +77,6 @@ app.get('/api/reviews/:businessId', async (req, res, next) => {
 });
 
 app.get('/api/settings', async (req, res, next) => {
-  // const { userId } = req.user; --change when sign in implemented AppContext
   const userId = 1;
   if (!userId) {
     throw new ClientError(401, 'invalid credentials');
@@ -97,7 +96,6 @@ app.get('/api/settings', async (req, res, next) => {
 });
 
 app.post('/api/reviews', uploadsMiddleware, async (req, res, next) => {
-  // const { userId } = req.user; --change when sign in implemented AppContext
   const userId = 1;
   if (!userId) {
     throw new ClientError(401, 'invalid credentials');
@@ -106,7 +104,7 @@ app.post('/api/reviews', uploadsMiddleware, async (req, res, next) => {
   if (!drinkType || !recommend || !content) {
     throw new ClientError(400, 'please fill out the required fields');
   }
-  const fileUrl = req.file.location; // The S3 url to access the uploaded file later
+  const fileUrl = req.file.location;
   const sql = `
     insert into "reviews" ("userId", "storeId", "imageUrl", "content", "drinkType", "recommend")
     values ($1, $2, $3, $4, $5, $6)
@@ -123,7 +121,6 @@ app.post('/api/reviews', uploadsMiddleware, async (req, res, next) => {
 });
 
 app.post('/api/settings', uploadsMiddleware, async (req, res, next) => {
-  // const { userId } = req.user; --change when sign in implemented AppContext
   const userId = 1;
   if (!userId) {
     throw new ClientError(401, 'invalid credentials');
@@ -132,7 +129,7 @@ app.post('/api/settings', uploadsMiddleware, async (req, res, next) => {
   if (!firstName || !lastName || !email) {
     throw new ClientError(400, 'please fill out the required fields');
   }
-  const fileUrl = req.file.location; // The S3 url to access the uploaded file later
+  const fileUrl = req.file.location;
   const sql = `
     update "users"
        set "firstName" = $2,

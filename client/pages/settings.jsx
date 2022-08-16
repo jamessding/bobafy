@@ -2,12 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/navbar';
 
 export default function Settings(props) {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    avatarUrl: ''
+  });
   const fileInputRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState();
+
+  const handleChange = e => {
+    setUser(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   useEffect(() => {
     getUserDetails();
@@ -23,10 +29,12 @@ export default function Settings(props) {
       })
         .then(res => res.json())
         .then(result => {
-          setFirstName(result[0].firstName);
-          setLastName(result[0].lastName);
-          setEmail(result[0].email);
-          setAvatarUrl(result[0].avatarUrl);
+          setUser({
+            firstName: result[0].firstName,
+            lastName: result[0].lastName,
+            email: result[0].email,
+            avatarUrl: result[0].avatarUrl
+          });
         });
     } catch (err) {
       console.error(err);
@@ -43,19 +51,21 @@ export default function Settings(props) {
     event.preventDefault();
     const formData = new FormData();
     formData.append('image', fileInputRef.current.files[0]);
-    formData.append('firstName', firstName);
-    formData.append('lastName', lastName);
-    formData.append('email', email);
+    formData.append('firstName', user.firstName);
+    formData.append('lastName', user.lastName);
+    formData.append('email', user.email);
     try {
       const response = await fetch('/api/settings', {
         method: 'POST',
         body: formData
       });
       const result = await response.json();
-      setFirstName(result.firstName);
-      setLastName(result.lastName);
-      setEmail(result.email);
-      setAvatarUrl(result.avatarUrl);
+      setUser({
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: result.email,
+        avatarUrl: result.avatarUrl
+      });
       fileInputRef.current.value = null;
       window.location.hash = '#';
     } catch (err) {
@@ -74,7 +84,7 @@ export default function Settings(props) {
               <p>First Name</p>
             </div>
             <div className='col text-end me-3'>
-              <input onChange={event => setFirstName(event.target.value)} className='settings-input' defaultValue={firstName} type='text'></input>
+              <input name='firstName' onChange={handleChange} className='settings-input' defaultValue={user.firstName} type='text'></input>
             </div>
           </div>
           <hr className='margin-bottom'></hr>
@@ -83,7 +93,7 @@ export default function Settings(props) {
               <p>Last Name</p>
             </div>
             <div className='col text-end me-3'>
-              <input onChange={event => setLastName(event.target.value)} className='settings-input' defaultValue={lastName} type='text'></input>
+              <input name='lastName' onChange={handleChange} className='settings-input' defaultValue={user.lastName} type='text'></input>
             </div>
           </div>
           <hr className='margin-bottom'></hr>
@@ -92,7 +102,7 @@ export default function Settings(props) {
               <p>Email</p>
             </div>
             <div className='col text-end me-3'>
-              <input onChange={event => setEmail(event.target.value)}className='settings-input' size='35' defaultValue={email} type='text'></input>
+              <input name='email' onChange={handleChange}className='settings-input' size='35' defaultValue={user.email} type='text'></input>
             </div>
           </div>
           <hr></hr>
@@ -113,7 +123,7 @@ export default function Settings(props) {
               {
                 !selectedImage
                   ? (
-                  <img className='preview-image' src={avatarUrl} />
+                  <img className='preview-image' src={user.avatarUrl} />
                     )
                   : <img className='preview-image' src={URL.createObjectURL(selectedImage)} />
               }
