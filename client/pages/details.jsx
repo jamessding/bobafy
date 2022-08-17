@@ -6,7 +6,6 @@ import LoadAnimation from '../components/loadAnimation';
 import Hours from '../components/hours';
 import ReviewModal from '../components/reviewModal';
 import Reviews from '../components/reviews';
-import Navbar from '../components/navbar';
 
 export default function Details(props) {
 
@@ -87,7 +86,6 @@ export default function Details(props) {
   } else {
     return (
       <>
-        <Navbar />
         <div className='row'>
           <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">
             <div className="carousel-inner">

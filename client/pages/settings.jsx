@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Navbar from '../components/navbar';
 
 export default function Settings(props) {
   const [user, setUser] = useState({
@@ -75,7 +74,6 @@ export default function Settings(props) {
 
   return (
     <>
-      <Navbar />
       <div className='container'>
         <h1 className='text-center m-5'>Settings</h1>
         <form onSubmit={handleSubmit}>
