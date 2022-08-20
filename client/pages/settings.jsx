@@ -29,10 +29,10 @@ export default function Settings(props) {
         .then(res => res.json())
         .then(result => {
           setUser({
-            firstName: result[0].firstName,
-            lastName: result[0].lastName,
-            email: result[0].email,
-            avatarUrl: result[0].avatarUrl
+            firstName: result[0]?.firstName,
+            lastName: result[0]?.lastName,
+            email: result[0]?.email,
+            avatarUrl: result[0]?.avatarUrl
           });
         });
     } catch (err) {

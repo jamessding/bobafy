@@ -14,6 +14,7 @@ CREATE TABLE "users" (
 	"lastName" TEXT,
 	"avatarUrl" TEXT,
   "email" TEXT,
+  "createdAt" timestamptz(6) NOT NULL default now(),
 	CONSTRAINT "users_pk" PRIMARY KEY ("userId")
 ) WITH (
   OIDS=FALSE

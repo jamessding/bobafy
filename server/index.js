@@ -134,7 +134,7 @@ app.get('/api/reviews/:businessId', async (req, res, next) => {
 app.use(authorizationMiddleware);
 
 app.get('/api/settings', async (req, res, next) => {
-  const userId = 1;
+  const { userId } = req.user;
   if (!userId) {
     throw new ClientError(401, 'invalid credentials');
   }
@@ -153,7 +153,7 @@ app.get('/api/settings', async (req, res, next) => {
 });
 
 app.post('/api/reviews', uploadsMiddleware, async (req, res, next) => {
-  const userId = 1;
+  const { userId } = req.user;
   if (!userId) {
     throw new ClientError(401, 'invalid credentials');
   }
@@ -178,7 +178,7 @@ app.post('/api/reviews', uploadsMiddleware, async (req, res, next) => {
 });
 
 app.post('/api/settings', uploadsMiddleware, async (req, res, next) => {
-  const userId = 1;
+  const { userId } = req.user;
   if (!userId) {
     throw new ClientError(401, 'invalid credentials');
   }
