@@ -37,32 +37,43 @@ export default function AuthForm({ handleSignIn, guestSignIn }) {
   };
 
   return (
-    <div className='row justify-center'>
-      <form onSubmit={handleSubmit} method='get'>
-        <div className="row justify-center">
-          <label htmlFor='username'></label>
-          <input onChange={handleChange} name="username" placeholder='username'
-            value={userInfo.username} className='margin-bottom-10' type='text' required></input>
-        </div>
-        <div className="row justify-center margin-bottom">
-          <label htmlFor='password'></label>
-          <input onChange={handleChange} name="password" placeholder='password'
-            value={userInfo.password} className='margin-top-10 margin-bottom-10' type='password' required></input>
-        </div>
-        <div className='row justify-center'>
-          {window.location.hash === '#sign-up'
-            ? <button type='submit' className='sign-up-button margin-top-10 pointer'>SIGN UP</button>
-            : <button type='submit' className='sign-up-button margin-top-10 pointer'>SIGN IN</button>}
-        </div>
-        <div className="row justify-center">
+    <form className="w-100" onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <label htmlFor="username" className="form-label"></label>
+        <input
+          required
+          autoFocus
+          id="username"
+          placeholder='Username'
+          value={userInfo.username}
+          type="text"
+          name="username"
+          onChange={handleChange}
+          className="form-control bg-light" />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="password" className="form-label"></label>
+        <input
+          required
+          id="password"
+          placeholder='Password'
+          value={userInfo.password}
+          type="password"
+          name="password"
+          onChange={handleChange}
+          className="form-control bg-light" />
+      </div>
+      <div className="text-center">
+        {window.location.hash === '#sign-up'
+          ? <button type='submit' className='orange-button mt-5 mb-1' >SIGN UP</button>
+          : <button type='submit' className='orange-button mt-5 mb-1' >SIGN IN</button>}
           {window.location.hash === '#sign-up'
             ? <p>Already have an account? <a href='#sign-in' className='sign-in-up'>Sign in!</a></p>
             : <p>Don&apos;t have an account? <a href='#sign-up' className='sign-in-up'>Sign up!</a></p>}
-        </div>
-        <div className='row justify-center'>
-          <button type='button' onClick={guestSignIn} className='sign-up-button margin-top-10 pointer'>GUEST SIGN IN</button>
-        </div>
-      </form>
-    </div>
+      </div>
+      <div className='text-center'>
+        <button type='button' onClick={guestSignIn} className='orange-button'>GUEST SIGN IN</button>
+      </div>
+    </form>
   );
 }
