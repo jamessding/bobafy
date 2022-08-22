@@ -25,7 +25,8 @@ export default function Settings(props) {
       fetch('/api/settings', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Access-Token': localStorage.getItem('jwt')
         }
       })
         .then(res => res.json())
