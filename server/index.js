@@ -186,8 +186,21 @@ app.post('/api/settings', uploadsMiddleware, async (req, res, next) => {
   if (!firstName || !lastName || !email) {
     throw new ClientError(400, 'please fill out the required fields');
   }
-  const fileUrl = req.file.location;
-  const sql = `
+  const fileUrl = req.file?.location;
+  let sql;
+  let params;
+  if (!fileUrl) {
+    sql = `
+    update "users"
+       set "firstName" = $2,
+           "lastName" = $3,
+           "email" = $4
+     where "userId" = $1
+     returning *
+    `;
+    params = [userId, firstName, lastName, email];
+  } else {
+    sql = `
     update "users"
        set "firstName" = $2,
            "lastName" = $3,
@@ -196,7 +209,8 @@ app.post('/api/settings', uploadsMiddleware, async (req, res, next) => {
      where "userId" = $1
      returning *
     `;
-  const params = [userId, firstName, lastName, email, fileUrl];
+    params = [userId, firstName, lastName, email, fileUrl];
+  }
   try {
     const result = await db.query(sql, params);
     const [userDetails] = result.rows;

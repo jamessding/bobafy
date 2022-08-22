@@ -59,6 +59,9 @@ export default function Settings(props) {
     try {
       const response = await fetch('/api/settings', {
         method: 'POST',
+        headers: {
+          'X-Access-Token': localStorage.getItem('jwt')
+        },
         body: formData
       });
       const result = await response.json();
