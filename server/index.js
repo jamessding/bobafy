@@ -46,7 +46,7 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
     const [user] = result.rows;
     res.status(201).json(user);
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 });
 
@@ -77,7 +77,7 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
     const token = jwt.sign(payload, process.env.TOKEN_SECRET);
     res.status(200).json({ token, user: payload });
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 });
 
