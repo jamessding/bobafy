@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Navbar from '../components/navbar';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import AppContext from '../lib/app-context';
+import Redirect from '../components/redirect';
 
 export default function Settings(props) {
-  const [user, setUser] = useState({
+  const [userDetails, setUserDetails] = useState({
     firstName: '',
     lastName: '',
     email: '',
@@ -12,7 +13,7 @@ export default function Settings(props) {
   const [selectedImage, setSelectedImage] = useState();
 
   const handleChange = e => {
-    setUser(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setUserDetails(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   useEffect(() => {
@@ -24,16 +25,17 @@ export default function Settings(props) {
       fetch('/api/settings', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Access-Token': localStorage.getItem('jwt')
         }
       })
         .then(res => res.json())
         .then(result => {
-          setUser({
-            firstName: result[0].firstName,
-            lastName: result[0].lastName,
-            email: result[0].email,
-            avatarUrl: result[0].avatarUrl
+          setUserDetails({
+            firstName: result[0]?.firstName,
+            lastName: result[0]?.lastName,
+            email: result[0]?.email,
+            avatarUrl: result[0]?.avatarUrl
           });
         });
     } catch (err) {
@@ -51,16 +53,19 @@ export default function Settings(props) {
     event.preventDefault();
     const formData = new FormData();
     formData.append('image', fileInputRef.current.files[0]);
-    formData.append('firstName', user.firstName);
-    formData.append('lastName', user.lastName);
-    formData.append('email', user.email);
+    formData.append('firstName', userDetails.firstName);
+    formData.append('lastName', userDetails.lastName);
+    formData.append('email', userDetails.email);
     try {
       const response = await fetch('/api/settings', {
         method: 'POST',
+        headers: {
+          'X-Access-Token': localStorage.getItem('jwt')
+        },
         body: formData
       });
       const result = await response.json();
-      setUser({
+      setUserDetails({
         firstName: result.firstName,
         lastName: result.lastName,
         email: result.email,
@@ -73,9 +78,19 @@ export default function Settings(props) {
     }
   };
 
+  const { user } = useContext(AppContext);
+
+  if (!user) return <Redirect to="sign-in" />;
+
+  let imagePreview;
+  if (!userDetails.avatarUrl) {
+    imagePreview = './images/default-profile.png';
+  } else {
+    imagePreview = userDetails.avatarUrl;
+  }
+
   return (
     <>
-      <Navbar />
       <div className='container'>
         <h1 className='text-center m-5'>Settings</h1>
         <form onSubmit={handleSubmit}>
@@ -84,7 +99,7 @@ export default function Settings(props) {
               <p>First Name</p>
             </div>
             <div className='col text-end me-3'>
-              <input name='firstName' onChange={handleChange} className='settings-input' defaultValue={user.firstName} type='text'></input>
+              <input name='firstName' onChange={handleChange} className='settings-input' defaultValue={userDetails.firstName} type='text'></input>
             </div>
           </div>
           <hr className='margin-bottom'></hr>
@@ -93,7 +108,7 @@ export default function Settings(props) {
               <p>Last Name</p>
             </div>
             <div className='col text-end me-3'>
-              <input name='lastName' onChange={handleChange} className='settings-input' defaultValue={user.lastName} type='text'></input>
+              <input name='lastName' onChange={handleChange} className='settings-input' defaultValue={userDetails.lastName} type='text'></input>
             </div>
           </div>
           <hr className='margin-bottom'></hr>
@@ -102,7 +117,7 @@ export default function Settings(props) {
               <p>Email</p>
             </div>
             <div className='col text-end me-3'>
-              <input name='email' onChange={handleChange}className='settings-input' size='35' defaultValue={user.email} type='text'></input>
+              <input name='email' onChange={handleChange}className='settings-input' size='35' defaultValue={userDetails.email} type='text'></input>
             </div>
           </div>
           <hr></hr>
@@ -123,7 +138,7 @@ export default function Settings(props) {
               {
                 !selectedImage
                   ? (
-                  <img className='preview-image' src={user.avatarUrl} />
+                  <img className='preview-image' src={imagePreview} />
                     )
                   : <img className='preview-image' src={URL.createObjectURL(selectedImage)} />
               }

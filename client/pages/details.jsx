@@ -6,7 +6,6 @@ import LoadAnimation from '../components/loadAnimation';
 import Hours from '../components/hours';
 import ReviewModal from '../components/reviewModal';
 import Reviews from '../components/reviews';
-import Navbar from '../components/navbar';
 
 export default function Details(props) {
 
@@ -86,8 +85,7 @@ export default function Details(props) {
     return <NotFound />;
   } else {
     return (
-      <>
-        <Navbar />
+      <div className='container px-0 no-gutters'>
         <div className='row'>
           <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">
             <div className="carousel-inner">
@@ -169,7 +167,7 @@ export default function Details(props) {
         <Reviews reviews={reviews} />
         <Hours hours={details.hours[0].open} />
         <ReviewModal onSubmit={addToReviews} name={details.name} businessId={details.businessId} />
-      </>
+      </div>
     );
   }
 }

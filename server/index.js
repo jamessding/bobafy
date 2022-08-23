@@ -2,6 +2,8 @@ const fetch = require('node-fetch');
 require('dotenv/config');
 const path = require('path');
 const express = require('express');
+const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
 const errorMiddleware = require('./error-middleware');
 const ClientError = require('./client-error');
 const uploadsMiddleware = require('./uploads-middleware');
@@ -10,6 +12,7 @@ const app = express();
 const publicPath = path.join(__dirname, 'public');
 const yelp = require('yelp-fusion');
 const client = yelp.client(process.env.YELP_NPM_AUTHORIZATION);
+const authorizationMiddleware = require('./authorization-middleware');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -25,6 +28,58 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   app.use(express.static(publicPath));
 }
+
+app.post('/api/auth/sign-up', async (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'username and password are required fields');
+  }
+  try {
+    const hashedPassword = await argon2.hash(password);
+    const sql = `
+      insert into "users" ("username", "hashedPassword")
+      values ($1, $2)
+      returning "userId", "username", "createdAt"
+      `;
+    const params = [username, hashedPassword];
+    const result = await db.query(sql, params);
+    const [user] = result.rows;
+    res.status(201).json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/api/auth/sign-in', async (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(401, 'invalid login');
+  }
+  const sql = `
+    select "userId",
+           "hashedPassword"
+      from "users"
+     where "username" = $1
+  `;
+  const params = [username];
+  try {
+    const result = await db.query(sql, params);
+    const [user] = result.rows;
+    if (!user) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const { userId, hashedPassword } = user;
+    const isMatching = await argon2.verify(hashedPassword, password);
+    if (!isMatching) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const payload = { userId, username };
+    const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+    res.status(200).json({ token, user: payload });
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.get('/api/yelp/search/:location', async (req, res, next) => {
   const { location } = req.params;
@@ -76,8 +131,10 @@ app.get('/api/reviews/:businessId', async (req, res, next) => {
   }
 });
 
+app.use(authorizationMiddleware);
+
 app.get('/api/settings', async (req, res, next) => {
-  const userId = 1;
+  const { userId } = req.user;
   if (!userId) {
     throw new ClientError(401, 'invalid credentials');
   }
@@ -96,7 +153,7 @@ app.get('/api/settings', async (req, res, next) => {
 });
 
 app.post('/api/reviews', uploadsMiddleware, async (req, res, next) => {
-  const userId = 1;
+  const { userId } = req.user;
   if (!userId) {
     throw new ClientError(401, 'invalid credentials');
   }
@@ -121,7 +178,7 @@ app.post('/api/reviews', uploadsMiddleware, async (req, res, next) => {
 });
 
 app.post('/api/settings', uploadsMiddleware, async (req, res, next) => {
-  const userId = 1;
+  const { userId } = req.user;
   if (!userId) {
     throw new ClientError(401, 'invalid credentials');
   }
@@ -129,8 +186,21 @@ app.post('/api/settings', uploadsMiddleware, async (req, res, next) => {
   if (!firstName || !lastName || !email) {
     throw new ClientError(400, 'please fill out the required fields');
   }
-  const fileUrl = req.file.location;
-  const sql = `
+  const fileUrl = req.file?.location;
+  let sql;
+  let params;
+  if (!fileUrl) {
+    sql = `
+    update "users"
+       set "firstName" = $2,
+           "lastName" = $3,
+           "email" = $4
+     where "userId" = $1
+     returning *
+    `;
+    params = [userId, firstName, lastName, email];
+  } else {
+    sql = `
     update "users"
        set "firstName" = $2,
            "lastName" = $3,
@@ -139,7 +209,8 @@ app.post('/api/settings', uploadsMiddleware, async (req, res, next) => {
      where "userId" = $1
      returning *
     `;
-  const params = [userId, firstName, lastName, email, fileUrl];
+    params = [userId, firstName, lastName, email, fileUrl];
+  }
   try {
     const result = await db.query(sql, params);
     const [userDetails] = result.rows;
@@ -147,18 +218,6 @@ app.post('/api/settings', uploadsMiddleware, async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
-
-app.get('/api/images', (req, res, next) => {
-  const sql = `
-    select *
-      from "images"
-  `;
-  db.query(sql)
-    .then(result => {
-      res.json(result.rows);
-    })
-    .catch(err => next(err));
 });
 
 app.use(errorMiddleware);

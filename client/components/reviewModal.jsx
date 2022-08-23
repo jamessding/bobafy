@@ -27,6 +27,9 @@ export default function ReviewModal({ onSubmit, name, businessId }) {
     try {
       const response = await fetch('/api/reviews', {
         method: 'POST',
+        headers: {
+          'X-Access-Token': localStorage.getItem('jwt')
+        },
         body: formData
       });
       const review = await response.json();
