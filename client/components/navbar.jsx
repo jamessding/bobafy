@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default function Navbar({ route, handleSignOut }) {
-
   return (
     <nav className="navbar navbar-dark bg-theme">
       <div className="container-fluid">
@@ -30,7 +29,6 @@ export default function Navbar({ route, handleSignOut }) {
             </>
           )
         }
-
       </div>
     </nav>
   );

@@ -85,7 +85,7 @@ export default function Details(props) {
     return <NotFound />;
   } else {
     return (
-      <>
+      <div className='container px-0 no-gutters'>
         <div className='row'>
           <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">
             <div className="carousel-inner">
@@ -167,7 +167,7 @@ export default function Details(props) {
         <Reviews reviews={reviews} />
         <Hours hours={details.hours[0].open} />
         <ReviewModal onSubmit={addToReviews} name={details.name} businessId={details.businessId} />
-      </>
+      </div>
     );
   }
 }
