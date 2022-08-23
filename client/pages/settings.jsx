@@ -82,6 +82,13 @@ export default function Settings(props) {
 
   if (!user) return <Redirect to="sign-in" />;
 
+  let imagePreview;
+  if (!userDetails.avatarUrl) {
+    imagePreview = './images/default-profile.png';
+  } else {
+    imagePreview = userDetails.avatarUrl;
+  }
+
   return (
     <>
       <div className='container'>
@@ -131,7 +138,7 @@ export default function Settings(props) {
               {
                 !selectedImage
                   ? (
-                  <img className='preview-image' src={userDetails.avatarUrl} />
+                  <img className='preview-image' src={imagePreview} />
                     )
                   : <img className='preview-image' src={URL.createObjectURL(selectedImage)} />
               }
